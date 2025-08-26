@@ -1,0 +1,25 @@
+# Use a custom Docker image
+image:
+  file: .gitpod.Dockerfile
+
+# Tasks to run when workspace starts
+tasks:
+  - name: Install & Start React
+    init: |
+      cd web
+      npm install
+    command: |
+      cd web
+      npm start
+
+# Ports to expose
+ports:
+  - port: 3000
+    onOpen: open-preview
+
+# VS Code extensions for React
+vscode:
+  extensions:
+    - dsznajder.es7-react-js-snippets # React snippets
+    - esbenp.prettier-vscode          # Code formatter
+    - dbaeumer.vscode-eslint          # Linter

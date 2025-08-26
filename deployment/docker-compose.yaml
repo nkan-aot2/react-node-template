@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  postgres_db:
+    image: postgres:11
+    restart: always
+    ports:
+      - "6000:5432"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      dockerfile: api/Dockerfile
+      context: "./../"
+    image: api:latest
+    depends_on:
+      - postgres_db
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: postgres_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_PORT: ${DB_PORT}
+      PORT: ${PORT}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      LOG_LEVEL: ${LOG_LEVEL}
+
+  react-web:
+    build:
+      context: ../web
+      dockerfile: Dockerfile
+    image: web:latest
+    pull_policy: always
+    ports:
+      - "3000:8080"
+    stdin_open: true
+    volumes:
+      - ../web:/react-web
+      - /react-web/node_modules
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:24.0.3
+  #   command: start-dev
+  #   environment:
+  #     KEYCLOAK_ADMIN: admin
+  #     KEYCLOAK_ADMIN_PASSWORD: admin
+  #   ports:
+  #     - "8080:8080"
+  #   restart: unless-stopped
+volumes:
+  pgdata:
