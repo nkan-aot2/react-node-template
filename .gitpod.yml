@@ -46,8 +46,8 @@ tasks:
 
 ports:
   - name: react-web
-    description: Port 3000 for the react-web
-    port: 3000
+    description: Port 4000 for the react-web
+    port: 4000
     onOpen: open-preview
     visibility: public
   - name: api
