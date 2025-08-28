@@ -1,4 +1,4 @@
-image: ghcr.io/gitpod-io/workspace-full:latest
+image: gitpod/workspace-full:latest
 
 tasks:
   - name: infrastructure
