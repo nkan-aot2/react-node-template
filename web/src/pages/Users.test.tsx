@@ -1,28 +1,28 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { vi, type Mock, beforeEach, describe, test, expect } from 'vitest';
 import Users from './Users';
 import userService from '../services/userService';
 
-jest.mock('../services/userService'); // Mock the userService module
+vi.mock('../services/userService'); // Mock the userService module
 
 describe('Users Page', () => {
   beforeEach(() => {
-    jest.clearAllMocks(); // Clear mocks before each test 
+    vi.clearAllMocks(); // Clear mocks before each test 
   });
 
   test('renders Users page with form fields', () => {
     render(<Users />);
 
     // Check if the form fields are rendered
-    expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Middle Name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Date of Birth/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Save User/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/First Name/i)).to.exist;
+    expect(screen.getByLabelText(/Middle Name/i)).to.exist;
+    expect(screen.getByLabelText(/Last Name/i)).to.exist;
+    expect(screen.getByLabelText(/Date of Birth/i)).to.exist;
+    expect(screen.getByRole('button', { name: /Save User/i })).to.exist;
   });
 
   test('displays success message on form submission', async () => {
-    userService.saveUser.mockResolvedValueOnce({ message: 'User saved successfully!' });
+    (userService.saveUser as Mock).mockResolvedValueOnce({ message: 'User saved successfully!' });
 
     render(<Users />);
 
@@ -41,11 +41,11 @@ describe('Users Page', () => {
     fireEvent.click(screen.getByRole('button', { name: /Save User/i }));
 
     // Check for success message
-    expect(await screen.findByText(/User saved successfully!/i)).toBeInTheDocument();
+    expect(await screen.findByText(/User saved successfully!/i)).to.exist;
   });
 
   test('displays error message on form submission failure', async () => {
-    userService.saveUser.mockRejectedValueOnce(new Error('Error saving user.'));
+    (userService.saveUser as Mock).mockRejectedValueOnce(new Error('Error saving user.'));
 
     render(<Users />);
 
@@ -64,6 +64,6 @@ describe('Users Page', () => {
     fireEvent.click(screen.getByRole('button', { name: /Save User/i }));
 
     // Check for error message
-    expect(await screen.findByText(/Error saving user./i)).toBeInTheDocument();
+    expect(await screen.findByText(/Error saving user./i)).to.exist;
   });
 });

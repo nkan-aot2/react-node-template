@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import logo from "../../assets/images/logo-banner.png";
 
-const Navigation = () => {
+const Navigation: React.FC = () => {
     return (
         <nav>
             <Link to="/" className="brand">
