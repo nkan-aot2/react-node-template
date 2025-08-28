@@ -40,7 +40,7 @@ services:
     image: web:latest
     pull_policy: always
     ports:
-      - "4000:8080"
+      - "3000:80"
     stdin_open: true
     volumes:
       - ../web:/react-web

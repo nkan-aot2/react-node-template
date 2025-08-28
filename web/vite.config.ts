@@ -10,9 +10,5 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom', // Use JSDOM for browser-like environment    
     include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}"],
-  },
-  server: {
-    host: '0.0.0.0',
-    port: 4000,
   }
 });
