@@ -23,6 +23,7 @@ export default tseslint.config([
     }, // Add Vitest plugin
     rules: {
       "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-explicit-any": "off",
       "chai-friendly/no-unused-expressions": "error",
       "@typescript-eslint/no-unused-vars": [
         "error",

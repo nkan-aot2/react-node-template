@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import userService from '../services/userService'; 
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { saveUser, fetchUsers } from '../services/userService';
+import { User } from '../types/user';
 import './users.css';
 
+
 const Users = () => {
-    const [formData, setFormData] = useState({
+    const dispatch = useDispatch<AppDispatch>();
+    const { data: users, loading, error } = useSelector((state: RootState) => state.api['fetchUsers'] || {});
+
+    const [formData, setFormData] = useState<User>({
         firstName: '',
         middleName: '',
         lastName: '',
@@ -11,6 +18,10 @@ const Users = () => {
     });
 
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        dispatch(fetchUsers());
+    }, [dispatch]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -20,8 +31,9 @@ const Users = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const _response = await userService.saveUser(formData);
+            await dispatch(saveUser(formData));
             setMessage('User saved successfully!');
+            dispatch(fetchUsers());
         } catch (_error) {
             setMessage('Error saving user.');
         }
@@ -77,6 +89,30 @@ const Users = () => {
                 <button type="submit">Save User</button>
             </form>
             {message && <p>{message}</p>}
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>}
+            {!loading && !error && users && (
+                <table className="users-table">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Date of Birth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users?.users?.map((user: User, index: number) => (
+                            <tr key={index}>
+                                <td>{user.firstName}</td>
+                                <td>{user.middleName || '-'}</td>
+                                <td>{user.lastName}</td>
+                                <td>{user.dateOfBirth}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 };

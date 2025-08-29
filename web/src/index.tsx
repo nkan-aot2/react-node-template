@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './assets/styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from "react-redux";
+import store from './store';
+
 // import { ReactKeycloakProvider } from "@react-keycloak/web";
 // import keycloak from "./config/keycloakConfig";
 
@@ -10,7 +13,9 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   // <React.StrictMode>
   // <ReactKeycloakProvider authClient={keycloak}>
+  <Provider store={store}>
     <App />
+  </Provider>
   // </ReactKeycloakProvider>
   // </React.StrictMode>
 );
