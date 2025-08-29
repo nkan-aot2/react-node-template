@@ -35,18 +35,22 @@ services:
 
   react-web:
     build:
-      context: ../web
+      context: ./../web
       dockerfile: Dockerfile
-    image: web:latest
-    pull_policy: always
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:5000}
+    container_name: web
+    # depends_on:
+    #   - backend
+    volumes:
+      - ./src:/app/src
+    env_file:
+      - ../web/.env
+    environment:
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:5000}
     ports:
       - "3000:80"
-    stdin_open: true
-    volumes:
-      - ../web:/react-web
-      - /react-web/node_modules
-    environment:
-      REACT_APP_API_URL: ${REACT_APP_API_URL}
+    restart: unless-stopped
 
   # keycloak:
   #   image: quay.io/keycloak/keycloak:24.0.3
